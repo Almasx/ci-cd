@@ -12,7 +12,7 @@ jobs:
   tests:
     name: Testing Unit/E2E
 
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v3
@@ -45,8 +45,10 @@ jobs:
         with:
           name: E2E Tests Results
           path: ./my-report/index.html
+
   release:
     runs-on: ubuntu-latest
+    needs: tests
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
