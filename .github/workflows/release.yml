@@ -52,6 +52,7 @@ jobs:
     needs: tests
     permissions:
       issues: write
+      rele
 
     steps:
       - name: Checkout repository
@@ -78,16 +79,16 @@ jobs:
           update_existing: true
           search_existing: all
       - run: echo ISSUE_NUMBER=${{ steps.create-issue.outputs.number }} >> $GITHUB_ENV
-
+      
       - name: Create GitHub Release
         id: create_release
         uses: actions/create-release@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
         with:
           tag_name: ${{ github.ref }}
           release_name: Release ${{ github.ref }}
-          body: ${{ env.CHANGELOG }} + '\n\n[Test Results](https://github.com/${{github.repository}}/my-report/index.html)
+          body: ${{ env.CHANGELOG }}
           draft: false
           prerelease: false
 
