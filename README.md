@@ -2,7 +2,7 @@
 
 This repository contains the source code for Project Name. It uses automated checks, tests, and a release process. Below are details of these processes:
 
-## Commit Message Guidelines
+## Commit Message Guidelines (git hook (using husky) & action)
 
 We have very precise rules over how our git commit messages can be formatted. This leads to more readable messages that are easy to follow when looking through the project history.
 
