@@ -41,6 +41,11 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Set Git user
+        run: |
+          git config --global user.name 'Almasx'
+          git config --global user.email 'saparovalmas0@gmail.com'
+
       - name: Generate changelog
         run: npx standard-version
 
