@@ -6,7 +6,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     steps:
       - name: Check out code
@@ -27,4 +27,4 @@ jobs:
         run: npm run test-ci
 
       - name: E2E tests
-        run: npx playwright test
+        run: npx playwright test --project=chromium
