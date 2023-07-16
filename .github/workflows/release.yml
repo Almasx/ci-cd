@@ -6,14 +6,34 @@ on:
       - "v*"
 
 jobs:
-  release:
+  build:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Check out code
+      - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Use Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: "14.x"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm test
+
+      - name: Build
+        run: npm run build
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
           node-version: "14.x"
@@ -24,7 +44,7 @@ jobs:
       - name: Generate changelog
         run: npx standard-version
 
-      - name: Create GitHub release
+      - name: Create GitHub Release
         id: create_release
         uses: actions/create-release@v1
         env:
@@ -32,9 +52,7 @@ jobs:
         with:
           tag_name: ${{ github.ref }}
           release_name: Release ${{ github.ref }}
-          body: |
-            Changes in this Release
-            ${{ steps.changelog.outputs.changelog }}
+          body_path: CHANGELOG.md
           draft: false
           prerelease: false
 
