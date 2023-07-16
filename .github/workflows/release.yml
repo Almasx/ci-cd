@@ -3,12 +3,48 @@ name: Release
 on:
   push:
     tags:
-      - "v*"
+      - "v[1-9]+"
 
 env:
   CHANGELOG: ""
 
 jobs:
+  tests:
+    name: Testing Unit/E2E
+
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Playwright setup
+        run: npx playwright install
+
+      - name: Unit tests
+        run: npm run test-ci
+
+      - name: Publish Unit tests results
+        uses: actions/upload-artifact@v3
+        with:
+          name: Unit Tests Results
+          path: test-report.html
+
+      - name: E2E tests
+        run: npx playwright test --project=chromium
+
+      - name: Publish E2E tests results
+        uses: actions/upload-artifact@v3
+        with:
+          name: E2E Tests Results
+          path: ./my-report/index.html
   release:
     runs-on: ubuntu-latest
     steps:
@@ -43,7 +79,7 @@ jobs:
         with:
           tag_name: ${{ github.ref }}
           release_name: Release ${{ github.ref }}
-          body: ${{ env.CHANGELOG }}
+          body: ${{ env.CHANGELOG }} + '\n\n[Test Results](https://github.com/${{github.repository}}//my-report/index.html)
           draft: false
           prerelease: false
 
