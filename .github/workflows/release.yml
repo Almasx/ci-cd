@@ -43,11 +43,15 @@ jobs:
 
       - name: Set Git user
         run: |
-          git config --global user.name 'Almasx'
-          git config --global user.email 'saparovalmas0@gmail.com'
+          git config --global user.name 'github-actions'
+          git config --global user.email 'github-actions@github.com'
 
       - name: Generate changelog
         run: npx standard-version
+
+      - name: Get changelog
+        id: get_changelog
+        run: echo "::set-output name=changelog::$(cat CHANGELOG.md)"
 
       - name: Create GitHub Release
         id: create_release
@@ -57,7 +61,7 @@ jobs:
         with:
           tag_name: ${{ github.ref }}
           release_name: Release ${{ github.ref }}
-          body_path: CHANGELOG.md
+          body: ${{ steps.get_changelog.outputs.changelog }}
           draft: false
           prerelease: false
 
