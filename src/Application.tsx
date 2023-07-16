@@ -1,7 +1,7 @@
 import { Link, Route, Routes } from "react-router-dom";
 
-import { FC } from "react";
 import { About } from "./pages/About";
+import { FC } from "react";
 import { Home } from "./pages/Home";
 
 export const Application: FC = () => {
