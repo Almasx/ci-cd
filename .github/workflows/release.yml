@@ -5,29 +5,11 @@ on:
     tags:
       - "v*"
 
+env:
+  CHANGELOG: ""
+
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: "14.x"
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Run tests
-        run: npm test
-
-      - name: Build
-        run: npm run build
-
   release:
-    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -40,18 +22,18 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
-
-      - name: Set Git user
-        run: |
-          git config --global user.name 'github-actions'
-          git config --global user.email 'github-actions@github.com'
 
       - name: Generate changelog
-        run: npx standard-version
+        run: echo CHANGELOG=$(git log --oneline `git tag -l | sort -r | head -n 1`..HEAD) >> $GITHUB_ENV
 
-      - name: Get changelog
-        id: get_changelog
-        run: echo "::set-output name=changelog::$(cat CHANGELOG.md)"
+      - uses: JasonEtco/create-an-issue@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CHANGELOG: ${{ env.CHANGELOG }}
+        with:
+          filename: .github/ISSUE_TEMPLATE.md
+          update_existing: true
+          search_existing: all
 
       - name: Create GitHub Release
         id: create_release
@@ -61,7 +43,7 @@ jobs:
         with:
           tag_name: ${{ github.ref }}
           release_name: Release ${{ github.ref }}
-          body: ${{ steps.get_changelog.outputs.changelog }}
+          body: ${{ env.CHANGELOG }}
           draft: false
           prerelease: false
 
