@@ -1,7 +1,7 @@
 import { Link, Route, Routes } from "react-router-dom";
 
-import { FC } from "react";
 import { About } from "./pages/About";
+import { FC } from "react";
 import { Home } from "./pages/Home";
 
 export const Application: FC = () => {
@@ -14,7 +14,7 @@ export const Application: FC = () => {
         <Link data-testid="link-home" to="/">
           Home
         </Link>
-        <Link to="/about">About</Link>
+        <Link to="/about"> About</Link>
       </nav>
 
       <Routes>
