@@ -51,6 +51,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: tests
     permissions:
+      contents: write
       issues: write
 
     steps:
