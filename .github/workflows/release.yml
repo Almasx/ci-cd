@@ -98,6 +98,9 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
 
+    outputs:
+      issue_number: ${{ steps.create-issue.outputs.number }}
+
   finish:
     needs: [tests, release]
     name: Close Issue
