@@ -6,7 +6,7 @@ import { BrowserRouter } from "react-router-dom";
 import { MemoryRouter } from "react-router";
 import { Provider } from "react-redux";
 
-import { initStore } from "./store";
+import { initStore1 } from "./store";
 import { Application } from "./Application";
 
 it('по адресу /about должна открываться страница "о проекте"', () => {
